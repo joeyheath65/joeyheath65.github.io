@@ -1,15 +1,15 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AuthCallback() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
-
+  
   useEffect(() => {
     const handleCallback = async () => {
+      const { createClientComponentClient } = await import('@supabase/auth-helpers-nextjs');
+      const supabase = createClientComponentClient();
       const code = new URL(window.location.href).searchParams.get('code');
 
       if (code) {
@@ -19,7 +19,7 @@ export default function AuthCallback() {
     };
 
     handleCallback();
-  }, [router, supabase.auth]);
+  }, [router]);
 
   return null;
 } 

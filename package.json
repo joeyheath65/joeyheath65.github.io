@@ -1,0 +1,11 @@
+{
+  "name": "joeyheath65-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd client && npm run start",
+    "deploy": "cd client && npm run deploy"
+  }
+} 

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { assistants } from '@/config/assistants';
 import SimpleChatWindow from '@/components/SimpleChatWindow';

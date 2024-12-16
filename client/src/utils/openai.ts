@@ -5,69 +5,48 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true // Note: In production, you might want to proxy through your backend
 });
 
-const SYSTEM_PROMPT = `You are an autonomous task execution AI. Your role is to:
-1. Break down user goals into specific, actionable tasks
-2. Execute each task thoughtfully
-3. Provide clear, concise responses
-4. Stay focused on the goal
-
-When breaking down tasks:
-- Create 2-5 specific, actionable steps
-- Make steps logical and sequential
-- Keep steps concise but clear
-
-When executing tasks:
-- Provide detailed, helpful responses
-- Stay relevant to the task
-- Be direct and practical`;
-
-export async function breakdownGoal(goal: string): Promise<string[]> {
+export async function sendMessage(message: string, assistantId: string): Promise<string> {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `Break down this goal into specific, actionable tasks: ${goal}` }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
+    // Create a new thread
+    const thread = await openai.beta.threads.create();
+
+    // Add the user's message to the thread
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: message
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error("No response from OpenAI");
-
-    // Parse the response into individual tasks
-    const tasks = content
-      .split('\n')
-      .filter(line => line.trim())
-      .map(line => line.replace(/^\d+\.\s*/, '').trim())
-      .filter(line => line.length > 0);
-
-    return tasks;
-  } catch (error) {
-    console.error('Error breaking down goal:', error);
-    throw new Error('Failed to break down the goal into tasks');
-  }
-}
-
-export async function executeTask(task: string, goal: string): Promise<string> {
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `Goal: ${goal}\nTask to execute: ${task}\n\nProvide a detailed response for this specific task.` }
-      ],
-      temperature: 0.7,
-      max_tokens: 1000
+    // Run the assistant
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: assistantId
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error("No response from OpenAI");
+    // Poll for the run completion
+    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    while (runStatus.status !== "completed") {
+      if (runStatus.status === "failed" || runStatus.status === "cancelled") {
+        throw new Error(`Run ${runStatus.status}: ${runStatus.last_error?.message || 'Unknown error'}`);
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    }
 
-    return content;
+    // Get the assistant's response
+    const messages = await openai.beta.threads.messages.list(thread.id);
+    const lastMessage = messages.data
+      .filter(message => message.role === "assistant")
+      .pop();
+
+    if (!lastMessage?.content[0]) {
+      throw new Error("No response from assistant");
+    }
+
+    return lastMessage.content[0].type === 'text' 
+      ? lastMessage.content[0].text.value 
+      : 'Unsupported response type';
+
   } catch (error) {
-    console.error('Error executing task:', error);
-    throw new Error('Failed to execute the task');
+    console.error('Error in OpenAI chat:', error);
+    throw error;
   }
 } 

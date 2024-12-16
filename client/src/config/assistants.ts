@@ -4,49 +4,64 @@ export interface Assistant {
   description: string;
   assistantId: string;
   icon?: string;
+  type?: 'openai' | 'gemini';
 }
 
 export const assistants: Assistant[] = [
   {
     id: 'general',
     name: 'General Assistant',
-    description: 'A versatile AI assistant for general tasks and inquiries',
+    description: 'The one and only Ms. Lorna Dane here to help you with your needs',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_GENERAL || '',
-    icon: '🤖'
+    icon: '🤖',
+    type: 'openai'
   },
   {
     id: 'coding',
-    name: 'Code Expert',
+    name: 'Coding Expert',
     description: 'Specialized in programming and technical tasks',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CODING || '',
-    icon: '👨‍💻'
+    icon: '👨‍💻',
+    type: 'openai'
   },
   {
     id: 'writing',
-    name: 'Writing Assistant',
-    description: 'Expert in content creation and writing tasks',
+    name: 'Administrative Assistant',
+    description: 'Expert in administrative writing and tasks.',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_WRITING || '',
-    icon: '✍️'
+    icon: '✍️',
+    type: 'openai'
   },
   {
     id: 'research',
     name: 'Research Analyst',
     description: 'Specialized in research and analysis',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_RESEARCH || '',
-    icon: '🔍'
+    icon: '🔍',
+    type: 'openai'
   },
   {
     id: 'creative',
     name: 'Creative Director',
     description: 'Focused on creative and innovative solutions',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CREATIVE || '',
-    icon: '🎨'
+    icon: '🎨',
+    type: 'openai'
   },
   {
     id: 'business',
     name: 'Business Strategist',
     description: 'Expert in business strategy and planning',
     assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_BUSINESS || '',
-    icon: '💼'
+    icon: '💼',
+    type: 'openai'
+  },
+  {
+    id: 'gemini',
+    name: 'Gemini Pro',
+    description: 'Powered by Google\'s Gemini Pro model for advanced reasoning and analysis',
+    assistantId: 'gemini-pro',
+    icon: '🧠',
+    type: 'gemini'
   }
 ]; 

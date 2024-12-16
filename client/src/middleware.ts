@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
     }
 
     return res;
-  } catch (e) {
+  } catch (_) {
     // If there's an error (like in static export), redirect to login
     if (request.nextUrl.pathname.startsWith('/chat')) {
       const redirectUrl = request.nextUrl.clone();

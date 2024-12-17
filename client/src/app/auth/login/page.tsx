@@ -21,6 +21,10 @@ export default function LoginPage() {
         return;
       }
 
+      // Get the site URL from window location
+      const siteUrl = window.location.origin;
+      const redirectUrl = `${siteUrl}/auth/callback`;
+
       setAuthComponent(
         <Auth
           supabaseClient={supabase}
@@ -33,11 +37,16 @@ export default function LoginPage() {
                   brandAccent: '#1d4ed8',
                 }
               }
+            },
+            className: {
+              container: 'w-full',
+              button: 'w-full px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700',
+              input: 'w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500',
             }
           }}
           theme="dark"
           providers={['google', 'github']}
-          redirectTo={`${window.location.origin}/auth/callback`}
+          redirectTo={redirectUrl}
         />
       );
     };

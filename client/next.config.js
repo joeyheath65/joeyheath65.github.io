@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',  // Enable static HTML export
-  basePath: '/joeyheath65.github.io',  // Match your repository name
+  basePath: '',  // Remove the repository name from base path
   images: {
     unoptimized: true,  // Required for static export
   },
@@ -10,6 +10,8 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  // Add asset prefix for GitHub Pages
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/' : '',
 }
 
 module.exports = nextConfig 

@@ -7,6 +7,10 @@ const openai = new OpenAI({
 
 export async function sendMessage(message: string, assistantId: string): Promise<string> {
   try {
+    if (!assistantId) {
+      throw new Error('Assistant ID is required but not provided');
+    }
+
     // Create a new thread
     const thread = await openai.beta.threads.create();
 
@@ -23,12 +27,20 @@ export async function sendMessage(message: string, assistantId: string): Promise
 
     // Poll for the run completion
     let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-    while (runStatus.status !== "completed") {
+    let attempts = 0;
+    const maxAttempts = 30; // 30 seconds timeout
+
+    while (runStatus.status !== "completed" && attempts < maxAttempts) {
       if (runStatus.status === "failed" || runStatus.status === "cancelled") {
         throw new Error(`Run ${runStatus.status}: ${runStatus.last_error?.message || 'Unknown error'}`);
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
       runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      attempts++;
+    }
+
+    if (attempts >= maxAttempts) {
+      throw new Error('Request timed out after 30 seconds');
     }
 
     // Get the assistant's response
@@ -47,6 +59,9 @@ export async function sendMessage(message: string, assistantId: string): Promise
 
   } catch (error) {
     console.error('Error in OpenAI chat:', error);
-    throw error;
+    if (error instanceof Error) {
+      return `Error: ${error.message}`;
+    }
+    return 'An unexpected error occurred';
   }
 } 

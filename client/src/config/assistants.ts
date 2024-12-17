@@ -7,12 +7,15 @@ export interface Assistant {
   type?: 'openai' | 'gemini';
 }
 
+// Default OpenAI assistant ID to use if none is provided in environment variables
+const DEFAULT_ASSISTANT_ID = 'asst_SYVhwLZDjKPrMNTCVD6L8BIo'; // Replace with your actual default assistant ID
+
 export const assistants: Assistant[] = [
   {
     id: 'general',
     name: 'General Assistant',
     description: 'The one and only Ms. Lorna Dane here to help you with your needs',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_GENERAL || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_GENERAL || DEFAULT_ASSISTANT_ID,
     icon: '🤖',
     type: 'openai'
   },
@@ -20,7 +23,7 @@ export const assistants: Assistant[] = [
     id: 'coding',
     name: 'Coding Expert',
     description: 'Specialized in programming and technical tasks',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CODING || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CODING || DEFAULT_ASSISTANT_ID,
     icon: '👨‍💻',
     type: 'openai'
   },
@@ -28,7 +31,7 @@ export const assistants: Assistant[] = [
     id: 'writing',
     name: 'Administrative Assistant',
     description: 'Expert in administrative writing and tasks.',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_WRITING || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_WRITING || DEFAULT_ASSISTANT_ID,
     icon: '✍️',
     type: 'openai'
   },
@@ -36,7 +39,7 @@ export const assistants: Assistant[] = [
     id: 'research',
     name: 'Research Analyst',
     description: 'Specialized in research and analysis',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_RESEARCH || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_RESEARCH || DEFAULT_ASSISTANT_ID,
     icon: '🔍',
     type: 'openai'
   },
@@ -44,7 +47,7 @@ export const assistants: Assistant[] = [
     id: 'creative',
     name: 'Creative Director',
     description: 'Focused on creative and innovative solutions',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CREATIVE || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_CREATIVE || DEFAULT_ASSISTANT_ID,
     icon: '🎨',
     type: 'openai'
   },
@@ -52,7 +55,7 @@ export const assistants: Assistant[] = [
     id: 'business',
     name: 'Business Strategist',
     description: 'Expert in business strategy and planning',
-    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_BUSINESS || '',
+    assistantId: process.env.NEXT_PUBLIC_OPENAI_ASSISTANT_ID_BUSINESS || DEFAULT_ASSISTANT_ID,
     icon: '💼',
     type: 'openai'
   },
